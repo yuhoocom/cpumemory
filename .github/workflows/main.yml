@@ -33,6 +33,11 @@ jobs:
       - name: Install gitbook-cli
         run: npm install -g gitbook-cli
 
+      - name: Install system dependencies for Calibre
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libopengl0
+
       # 第 4 步 (重要)：安装 Calibre，这是 gitbook pdf 命令的底层依赖
       - name: Install Calibre for PDF generation
         run: |
