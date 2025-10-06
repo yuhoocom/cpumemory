@@ -20,14 +20,13 @@ jobs:
         with:
           node-version: '10.x'
 
-
       - name: Install gitbook-cli
         run: npm install -g gitbook-cli
 
-      - name: Install system dependencies for Calibre
+      - name: Install system dependencies and Chinese fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y libegl1 libopengl0 libxcb-cursor0
+          sudo apt-get install -y libegl1 libopengl0 libxcb-cursor0 fonts-noto-cjk
 
       - name: Install Calibre for PDF generation
         run: |
