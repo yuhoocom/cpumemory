@@ -1,66 +1,50 @@
-# .github/workflows/build-book.yml
-
-# 1. Workflow 的名称
 name: Build GitBook PDF and EPUB
 
-# 2. 触发条件
 on:
-  # 允许你手动从 Actions 页面点击按钮来运行这个 workflow
   workflow_dispatch:
-  
-  # (可选) 每次推送到 main 分支时自动运行
   push:
     branches: [ "main" ]
 
-# 3. 定义要执行的任务
 jobs:
   build:
-    # 使用最新的 Ubuntu 虚拟机环境来运行
     runs-on: ubuntu-latest
 
     steps:
-      # 第 1 步：获取你的仓库代码
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      # 第 2 步：设置兼容的旧版 Node.js 环境 (这是解决问题的关键！)
       - name: Set up Node.js v12
         uses: actions/setup-node@v4
         with:
-          node-version: '12.x' # 使用 12.x 版本，对旧版 gitbook 兼容性好
+          node-version: '12.x'
 
-      # 第 3 步：安装 gitbook-cli
       - name: Install gitbook-cli
         run: npm install -g gitbook-cli
 
+      # We now install all required system dependencies in one step
       - name: Install system dependencies for Calibre
         run: |
           sudo apt-get update
-          sudo apt-get install -y libegl1 libopengl0
+          sudo apt-get install -y libegl1 libopengl0 libxcb-cursor0
 
-      # 第 4 步 (重要)：安装 Calibre，这是 gitbook pdf 命令的底层依赖
       - name: Install Calibre for PDF generation
         run: |
           sudo -v && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
 
-      # 第 5 步：安装书籍所需的插件
       - name: Install book plugins
         run: gitbook install
 
-      # 第 6 步：执行构建命令
       - name: Build PDF and EPUB
         run: |
           gitbook pdf . book.pdf
           gitbook epub . book.epub
 
-      # 第 7 步：上传构建产物 (PDF)
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: book-pdf
           path: book.pdf
 
-      # 第 8 步：上传构建产物 (EPUB)
       - name: Upload EPUB artifact
         uses: actions/upload-artifact@v4
         with:
