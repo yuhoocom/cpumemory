@@ -1,3 +1,5 @@
+# .github/workflows/build-book.yml
+
 name: Build GitBook PDF and EPUB
 
 on:
@@ -13,15 +15,15 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js v12
+      - name: Set up Node.js v10
         uses: actions/setup-node@v4
         with:
-          node-version: '12.x'
+          node-version: '10.x'
+
 
       - name: Install gitbook-cli
         run: npm install -g gitbook-cli
 
-      # We now install all required system dependencies in one step
       - name: Install system dependencies for Calibre
         run: |
           sudo apt-get update
